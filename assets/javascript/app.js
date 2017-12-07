@@ -2,8 +2,10 @@ $(document).ready(function() {
 
 var correct
 var incorrect
+var unanswered
 var time
-var currentQuestion = 0
+var currentQuestion
+var userGuess
 
 var questionsList = [{
 	question: "Who developed the equation to calculate horsepower?",
@@ -64,16 +66,24 @@ var questionsList = [{
 		$('#possibleAnswers').hide();
 		$('#submitButton').hide();
 		$('#startButton').show();
+		$('#results').hide();
+		$('#timer').hide();
+		currentQuestion = 0;
 		correct= 0 ;
 		incorrect = 0;
+		unanswered = 0;
 		time = 10;
+		userGuess = " ";
 	}
 
 	function start(){
+		reset();
 		$('#currentQuestion').show();
 		$('#possibleAnswers').show();
+		$('#timer').show();
 		$('#submitButton').show();
 		$('#startButton').hide();
+		$('#results').hide();
 		intervalId = setInterval(countDown, 1000);
 		generateQuestion();
 	}
@@ -86,23 +96,57 @@ var questionsList = [{
 		$('#choice4').text(questionsList[currentQuestion].answerList[3]);
 	}
 
+	function checkAnswer(){
+		if (userGuess == " "){
+			unanswered++;
+			console.log("Unanswered" + unanswered);
+		}else if (userGuess == (questionsList[currentQuestion].answer)){
+			correct++;
+			console.log("Correct" + correct);
+		}else if (userGuess !== (questionsList[currentQuestion].answer)){
+			incorrect++;
+			console.log("incorrect" + incorrect);
+		}
+	}
+
 	function submit(){
-		clearInterval(intervalId);
-		time = 11;
-		currentQuestion++;
-		generateQuestion();
-		intervalId = setInterval(countDown, 1000);
-		countDown();
-		
+		if(currentQuestion == questionsList.length - 1){
+			showResults();
+			clearInterval(intervalId);
+		}else{
+			checkAnswer();
+			clearInterval(intervalId);
+			time = 10;
+			currentQuestion++;
+			generateQuestion();
+			intervalId = setInterval(countDown, 1000);
+			countDown();
+			userGuess = " ";
+		}
 	}
 
 	function countDown(){
-		time--;
 		$('#timer').html("Time remaining: " + time + " seconds");
-		if (time <= 0){
+		time--;
+		if (time < 0){
 			clearInterval(intervalId);
+			alert("Time Up!!");
+			submit();
 		}	
 	}
+
+	function showResults(){
+			$('#currentQuestion').hide();
+			$('#possibleAnswers').hide();
+			$('#submitButton').hide();
+			$('#startButton').show();
+			$('#results').show();
+			$('#timer').hide();
+			$('#startButton').text("Restart Horsepower Trivia");
+			$('#correct').text("Correct:"+" "+correct);
+			$('#incorrect').text("Incorrect:"+" "+incorrect);
+			$('#unanswered').text("Unanswered:"+" "+unanswered);
+		}
 
 	$('#startButton').on("click", function(){
 		start();
@@ -111,6 +155,13 @@ var questionsList = [{
 	$('#submitButton').on("click", function(){
 		submit();
 	})
+
+	$('#possibleAnswers button').on("click", function(){
+		userGuess = $(this).val();
+		console.log(userGuess);
+	})
+
+	
 
 reset()
 
