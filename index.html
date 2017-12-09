@@ -4,6 +4,7 @@
 	<title>Trivia</title>
 	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link href="https://fonts.googleapis.com/css?family=Bangers|Roboto:500" rel="stylesheet">
 	<script type="text/javascript"></script>
 </head>
 <body>
@@ -11,22 +12,25 @@
 
 	<div id="question-container">
 
-		<div id="timer">Time remaining: 10 seconds</div>
-		<div id="currentQuestion">Current Question</div>
+		<div id="timer"></div>
+		<div id="currentQuestion"></div>
 		<div id="possibleAnswers">
-			<button id="choice1" value="0">0</button>
-			<button id="choice2" value="1">1</button>
-			<button id="choice3" value="2">2</button>
-			<button id="choice4" value="3">3</button>
+			<button id="choice1" value="0"></button>
+			<button id="choice2" value="1"></button>
+			<button id="choice3" value="2"></button>
+			<button id="choice4" value="3"></button>
 		</div>
 		<button class="submit" id="submitButton">Submit</button>
 		<button class="start" id="startButton">Start Your Engines!</button>
-		<div id="results">Results
+		<div id="results">
 			<div id="correct">Correct</div>
 			<div id="incorrect">Incorrect</div>
 			<div id="unanswered">Unanswered</div>
 		</div>
 	</div>
+
+	<audio id="correct-sound" src="assets/sounds/correct_sound.mp3"></audio>
+	<audio id="wrong-sound" src="assets/sounds/wrong_sound.mp3"></audio>
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 	<script type="text/javascript" src="assets/javascript/app.js"></script>

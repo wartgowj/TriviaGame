@@ -72,12 +72,13 @@ var questionsList = [{
 		correct= 0 ;
 		incorrect = 0;
 		unanswered = 0;
-		time = 10;
+		time = 16;
 		userGuess = " ";
 	}
 
 	function start(){
 		reset();
+		$('#possibleAnswers button').removeClass('selected');
 		$('#currentQuestion').show();
 		$('#possibleAnswers').show();
 		$('#timer').show();
@@ -97,26 +98,35 @@ var questionsList = [{
 	}
 
 	function checkAnswer(){
+		$('#correct-sound')[0].pause();
+		$('#wrong-sound')[0].pause();
+		$('#correct-sound')[0].currentTime = 0;
+		$('#wrong-sound')[0].currentTime = 0;
 		if (userGuess == " "){
+			$("#wrong-sound")[0].play();
 			unanswered++;
 			console.log("Unanswered" + unanswered);
 		}else if (userGuess == (questionsList[currentQuestion].answer)){
 			correct++;
+			$("#correct-sound")[0].play();
 			console.log("Correct" + correct);
 		}else if (userGuess !== (questionsList[currentQuestion].answer)){
 			incorrect++;
+			$("#wrong-sound")[0].play();
 			console.log("incorrect" + incorrect);
 		}
 	}
 
 	function submit(){
 		if(currentQuestion == questionsList.length - 1){
+			checkAnswer();
 			showResults();
 			clearInterval(intervalId);
 		}else{
+			$('#possibleAnswers button').removeClass('selected');
 			checkAnswer();
 			clearInterval(intervalId);
-			time = 10;
+			time = 16;
 			currentQuestion++;
 			generateQuestion();
 			intervalId = setInterval(countDown, 1000);
@@ -126,11 +136,9 @@ var questionsList = [{
 	}
 
 	function countDown(){
-		$('#timer').html("Time remaining: " + time + " seconds");
 		time--;
+		$('#timer').html("Time remaining: " + time);
 		if (time < 0){
-			clearInterval(intervalId);
-			alert("Time Up!!");
 			submit();
 		}	
 	}
@@ -143,9 +151,9 @@ var questionsList = [{
 			$('#results').show();
 			$('#timer').hide();
 			$('#startButton').text("Restart Horsepower Trivia");
-			$('#correct').text("Correct:"+" "+correct);
-			$('#incorrect').text("Incorrect:"+" "+incorrect);
-			$('#unanswered').text("Unanswered:"+" "+unanswered);
+			$('#correct').text("Correct:"+" "+correct +"  ");
+			$('#incorrect').text("Incorrect:"+" "+incorrect +"  ");
+			$('#unanswered').text("Unanswered:"+" "+unanswered +"  ");
 		}
 
 	$('#startButton').on("click", function(){
@@ -158,6 +166,8 @@ var questionsList = [{
 
 	$('#possibleAnswers button').on("click", function(){
 		userGuess = $(this).val();
+		$('#possibleAnswers button').removeClass('selected');
+		$(this).toggleClass('selected');
 		console.log(userGuess);
 	})
 
